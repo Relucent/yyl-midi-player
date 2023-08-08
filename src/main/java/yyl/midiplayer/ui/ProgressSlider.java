@@ -20,14 +20,25 @@ public class ProgressSlider extends JSlider {
 
     public ProgressSlider() {
         super(JSlider.HORIZONTAL, 0, RANGE_MAX, 0);
-
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                stateChanged(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                stateChanged(e);
+            }
+
+            private void stateChanged(MouseEvent e) {
                 JSlider slider = (JSlider) e.getSource();
                 int value = getValueFromMousePosition(slider, e.getX());
-                setValue(value);
-
+                int original = slider.getValue();
+                if (value == original) {
+                    return;
+                }
+                slider.setValue(value);
                 ChangeListener listener = afterMousePressedListener.get();
                 if (listener != null) {
                     listener.stateChanged(new ChangeEvent(slider));

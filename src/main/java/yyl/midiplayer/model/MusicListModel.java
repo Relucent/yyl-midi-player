@@ -12,9 +12,9 @@ import yyl.midiplayer.common.util.MidiUtil;
 public class MusicListModel extends AbstractTableModel {
 
     private List<MusicInfo> musicList = new ArrayList<>();
-    private String[] columnNames = { "Play State", "Name", "Track", "Duration" };
-    private int[] columnWidths = { 50, 350, 100, 50 };
-    private int[] columnAligns = { SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.RIGHT };
+    private String[] columnNames = { "Play State", "Name", "Tracks", "Duration" };
+    private int[] columnWidths = { 80, 500, 50, 50 };
+    private int[] columnAligns = { SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.RIGHT, SwingConstants.RIGHT };
     private int activedRowIndex = -1;
     private PlayStatus playStatus = PlayStatus.STOPPED;
 
@@ -147,9 +147,9 @@ public class MusicListModel extends AbstractTableModel {
         case 1:
             return info.getName();
         case 2:
-            return info.getSequenceInfo().getTrackName();
+            return info.getSequence().getTracks().length;
         case 3:
-            return MidiUtil.formatMicrosecondLength(info.getSequenceInfo().getTotalMicroseconds());
+            return MidiUtil.formatMicrosecondLength(info.getSequence().getMicrosecondLength());
         default:
             return null;
         }

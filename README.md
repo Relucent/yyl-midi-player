@@ -6,11 +6,13 @@ A simple MIDI music player developed using Java
 
 ## 打包说明
 打包成可执行的JAR，依赖库会放在lib目录下
+
 ```
 mvn clean package
 ```
 
 打包成可执行的Fat JAR，这个JAR 包含了项目本身和其所有依赖项，能够不依赖lib独立运行
+
 ```
 mvn clean package -P fat
 ```

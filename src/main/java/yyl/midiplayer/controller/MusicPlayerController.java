@@ -15,7 +15,6 @@ import yyl.midiplayer.common.util.MidiUtil;
 import yyl.midiplayer.model.MusicInfo;
 import yyl.midiplayer.model.MusicPlayer;
 import yyl.midiplayer.model.PlayStatus;
-import yyl.midiplayer.model.SequenceInfo;
 import yyl.midiplayer.ui.MainFrame;
 import yyl.midiplayer.ui.MusicControlPanel;
 import yyl.midiplayer.ui.MusicListPanel;
@@ -28,10 +27,14 @@ public class MusicPlayerController {
     private final MainFrame frame;
     private final MusicPlayer player;
 
+    /**
+     * 构造函数
+     * @param frame 主窗口
+     * @param player MIDI音乐播放器
+     */
     public MusicPlayerController(MainFrame frame, MusicPlayer player) {
         this.frame = frame;
         this.player = player;
-
         initEventHandling();
     }
 
@@ -113,9 +116,13 @@ public class MusicPlayerController {
         eventBus.subscribe(EventType.END_OF_TRACK, wrapInvokeLater((type, progress) -> {
             int rowCount = musicListPanel.getRowCount();
             int rowIndex = musicListPanel.getActivedRowIndex();
-            musicListPanel.setActivedRowIndex((rowIndex + 1) / rowCount);
-            player.setSequence(getActivedSequence());
-            player.play();
+            if (rowCount == 0) {
+                player.stop();
+            } else {
+                musicListPanel.setActivedRowIndex((rowIndex + 1) % rowCount);
+                player.setSequence(getActivedSequence());
+                player.play();
+            }
         }));
         // 更改激活的音乐 (通过双击列表)
         eventBus.subscribe(EventType.DBL_CLICK_ACTIVED_MUSIC, wrapInvokeLater((type, nil) -> {
@@ -143,20 +150,35 @@ public class MusicPlayerController {
         }));
     }
 
+    /**
+     * 包装事件监听器，从而保证事件会在 Swing线程中运行
+     * @param <T> 事件监听器处理的事件数据类型
+     * @param listener 事件监听器
+     * @return 包装后的事件监听器
+     */
     private <T> EventListener<T> wrapInvokeLater(EventListener<T> listener) {
         return (EventListener<T>) (eventType, eventData) -> {
             SwingUtilities.invokeLater(() -> listener.onEvent(eventType, eventData));
         };
     }
 
+    /**
+     * 从文件读取音乐(MIDI)信息
+     * @param file 文件
+     * @return 音乐(MIDI)信息
+     */
     private MusicInfo getMusicInfo(File file) {
-        SequenceInfo sequenceInfo = MidiUtil.getSequenceInfo(file);
-        if (sequenceInfo == null) {
+        Sequence sequence = MidiUtil.getSequence(file);
+        if (sequence == null) {
             return null;
         }
-        return new MusicInfo(file, sequenceInfo);
+        return new MusicInfo(file, sequence);
     }
 
+    /**
+     * 获得当前获得的MIDI序列
+     * @return MIDI序列
+     */
     private Sequence getActivedSequence() {
         MusicListPanel musicListPanel = frame.getMusicListPanel();
         int rowIndex = musicListPanel.getActivedRowIndex();
@@ -165,7 +187,7 @@ public class MusicPlayerController {
         musicListPanel.setActivedRowIndex(rowIndex);
         MusicInfo musicInfo = musicListPanel.getMusicInfo(rowIndex);
         if (musicInfo != null) {
-            return musicInfo.getSequenceInfo().getSequence();
+            return musicInfo.getSequence();
         }
         return null;
     }

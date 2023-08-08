@@ -24,8 +24,12 @@ import yyl.midiplayer.Main;
 import yyl.midiplayer.common.bus.EventBus;
 import yyl.midiplayer.common.bus.EventType;
 import yyl.midiplayer.common.constant.ArrayConstant;
+import yyl.midiplayer.common.constant.ImageConstant;
 import yyl.midiplayer.common.util.GuiUtil;
 
+/**
+ * 主窗体
+ */
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
@@ -37,6 +41,8 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
 
+        // 程序图标
+        setIconImage(ImageConstant.MUSIC);
         // 程序标题
         setTitle("Midi Player");
         // 设置主窗口的尺寸
@@ -145,5 +151,4 @@ public class MainFrame extends JFrame {
     public MusicListPanel getMusicListPanel() {
         return musicListPanel;
     }
-
 }
