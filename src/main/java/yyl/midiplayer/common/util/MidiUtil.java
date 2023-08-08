@@ -14,13 +14,19 @@ import javax.sound.midi.Track;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import yyl.midiplayer.Main;
 import yyl.midiplayer.common.constant.MidiMetaEventTypeConstant;
-import yyl.midiplayer.model.SequenceInfo;
 
+/**
+ * MIDI 工具类
+ */
 public class MidiUtil {
 
-    private final static Logger LOG = LoggerFactory.getLogger(Main.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MidiUtil.class);
+
+    /** 工具类，不需要实例化 */
+    protected MidiUtil() {
+
+    }
 
     /**
      * 获得MIDI序列的信息，如果不是一个MIDI文件，则返回null
@@ -41,39 +47,24 @@ public class MidiUtil {
     }
 
     /**
-     * 获取MIDI的信息
-     * @param file MIDI文件
-     * @return MIDI序列的信息
-     */
-    public static SequenceInfo getSequenceInfo(File file) {
-        Sequence sequence = MidiUtil.getSequence(file);
-        if (sequence == null) {
-            return null;
-        }
-        return getSequenceInfo(sequence);
-    }
-
-    /**
-     * 获取MIDI的信息
+     * 获取MIDI的轨道名称
      * @param sequence MIDI序列
      * @return MIDI序列的信息
      */
-    public static SequenceInfo getSequenceInfo(Sequence sequence) {
-
-        // 获取所有轨道
+    public static String[] getTrackNames(Sequence sequence) {
         Track[] tracks = sequence.getTracks();
-
-        String trackName = "";
-        for (Track track : tracks) {
-            for (int i = 0; i < track.size(); i++) {
-                MidiEvent event = track.get(i);
+        String[] trackNames = new String[tracks.length];
+        for (int i = 0; i < tracks.length; i++) {
+            Track track = tracks[i];
+            for (int j = 0; j < track.size(); j++) {
+                MidiEvent event = track.get(j);
                 MidiMessage message = event.getMessage();
                 if (message instanceof MetaMessage) {
                     MetaMessage metaMessage = (MetaMessage) message;
                     // 序列/轨道名称，用于标识序列或轨道的名称
                     if (metaMessage.getType() == MidiMetaEventTypeConstant.TRACK_NAME) {
                         try {
-                            trackName = new String(metaMessage.getData(), "UTF-8");
+                            trackNames[i] = new String(metaMessage.getData(), "UTF-8");
                         } catch (UnsupportedEncodingException e) {
                             // ignore
                         }
@@ -81,13 +72,7 @@ public class MidiUtil {
                 }
             }
         }
-
-        // 获取MIDI序列的分辨率（ticks per beat）
-        int resolution = sequence.getResolution();
-        // 获取MIDI序列的总时长（单位：微秒）
-        long totalMicroseconds = sequence.getMicrosecondLength();
-
-        return new SequenceInfo(sequence, trackName, resolution, totalMicroseconds);
+        return trackNames;
     }
 
     /**
@@ -100,6 +85,5 @@ public class MidiUtil {
         long minutes = seconds / 60;
         long remainingSeconds = seconds % 60;
         return minutes + ":" + (remainingSeconds > 9 ? remainingSeconds : "0" + remainingSeconds);
-
     }
 }
