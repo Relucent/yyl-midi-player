@@ -2,20 +2,22 @@ package yyl.midiplayer.model;
 
 import java.io.File;
 
+import javax.sound.midi.Sequence;
+
 /**
  * 音乐信息
  */
 public class MusicInfo {
 
-    private File file;
-    private String name;
-    private SequenceInfo sequenceInfo;
-    private long progress;
+    private final File file;
+    private final String name;
+    private final Sequence sequence;
+    private volatile long progress;
 
-    public MusicInfo(File file, SequenceInfo sequenceInfo) {
+    public MusicInfo(File file, Sequence sequence) {
         this.file = file;
         this.name = file.getName();
-        this.sequenceInfo = sequenceInfo;
+        this.sequence = sequence;
         this.progress = 0;
     }
 
@@ -27,8 +29,8 @@ public class MusicInfo {
         return name;
     }
 
-    public SequenceInfo getSequenceInfo() {
-        return sequenceInfo;
+    public Sequence getSequence() {
+        return sequence;
     }
 
     public void setProgress(long progress) {

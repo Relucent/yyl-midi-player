@@ -4,8 +4,14 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+/**
+ * GUI 相关常量
+ */
 public class MidiGuiConstant {
 
+    /**
+     * MIDI文件筛选器
+     */
     public static final FileFilter MIDI_FILE_FILTER;
     static {
         MIDI_FILE_FILTER = new FileFilter() {

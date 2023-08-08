@@ -137,8 +137,13 @@ public class MusicPlayer {
      * 暂停音乐
      */
     public void pause() {
-        sequencer.stop();
-        EventBus.INSTANCE.publish(EventType.PLAY_STOP_AFTER, null);
+        if (sequencer.isRunning()) {
+            sequencer.stop();
+            EventBus.INSTANCE.publish(EventType.PLAY_STOP_AFTER, null);
+        } else {
+            sequencer.start();
+            EventBus.INSTANCE.publish(EventType.PLAY_START_AFTER, null);
+        }
     }
 
     /**

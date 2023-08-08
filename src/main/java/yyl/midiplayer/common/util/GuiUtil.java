@@ -15,12 +15,15 @@ import javax.swing.UIManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import yyl.midiplayer.Main;
 import yyl.midiplayer.common.constant.ImageConstant;
 
 public class GuiUtil {
 
-    private final static Logger LOG = LoggerFactory.getLogger(Main.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GuiUtil.class);
+
+    /** 工具类，不需要实例化 */
+    protected GuiUtil() {
+    }
 
     /**
      * 初始化外观
