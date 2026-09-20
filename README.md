@@ -17,7 +17,12 @@ mvn clean package
 mvn clean package -P fat
 ```
 
+## 运行方法
+```
+java -jar yyl-midi-player.jar
+```
+
 ## 常用 maven-plugin 说明
-maven-compiler-plugin: 用于编译项目中的 Java 源代码。
-maven-jar-plugin：用于创建Java项目的JAR文件（Java Archive），将编译后的类文件和资源文件打包成JAR文件。
-maven-dependency-plugin：该插件用于处理项目的依赖项，包括复制依赖、解压缩依赖、分析依赖等。
+maven-compiler-plugin: 用于编译项目中的 Java 源代码。  
+maven-jar-plugin：用于创建Java项目的JAR文件（Java Archive），将编译后的类文件和资源文件打包成JAR文件。  
+maven-dependency-plugin：该插件用于处理项目的依赖项，包括复制依赖、解压缩依赖、分析依赖等。  
